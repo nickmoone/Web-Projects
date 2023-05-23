@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bruglichten tool</title>
+    
+    <link rel="start" HREF="https://www.nckm.nl/bruglichten">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+
+    <meta name="description" lang="nl" content="Gratis online tool om aan de hand van bruglichten op het vaarwater te bepalen of u wel of niet mag doorvaren.">
+    <meta name="keywords" lang="nl" content="varen, bruglichten, tutorial, uitleg, licht, stoplicht, lamp, brug, doorvaren, doorvaart, toegestaan, niet, toegestaan, tool, online, gratis, gratis tool, gratis online tool, gratis tool online, gratis online tool, gratis tool, gratis tool online, free, free tool, free tool online">
+    <meta name="author" lang="nl" content="Nick Moone">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .light {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .color-yellow {
+            background-color: #ffeb3b;
+        }
+
+        .color-red {
+            background-color: red;
+        }
+
+        .color-green {
+            background-color: green;
+        }
+
+        .color-black {
+            background-color: black;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            font-size: small;
+        }
+    </style>
+    <script>
+        var reasons = [
+                        "",
+                        "Enkel geel licht: doorvaart toegestaan, tegenliggende vaart mogelijk.",
+                        "Dubbel geel licht: doorvaart toegestaan, <u>geen</u> tegenliggende vaart mogelijk.",
+                        "Rood licht: doorvaart niet toegestaan.",
+                        "Rood boven groen: doorvaart niet toegestaan, maar wordt binnenkort toegestaan.",
+                        "Groen licht: doorvaart toegestaan.",
+                        "Groen boven rood: lichtconfiguratie niet bekend.",
+                        "Geen bruglichten: zelf situatie inschatten.",
+                        "Dubbel rood licht: doorvaart niet toegestaan, brug is buiten bedrijf."
+                      ];
+
+        function changeColor(circle) {
+            if (circle.id.includes("left")) {
+                var otherCircle = document.getElementById(circle.id.replace("left", "right"));
+            } else {
+                var otherCircle = document.getElementById(circle.id.replace("right", "left"));
+            }
+
+            if (circle.classList.contains("color-red")) {
+                circle.classList.remove("color-red");
+                otherCircle.classList.remove("color-red");
+                circle.classList.add("color-green");
+                otherCircle.classList.add("color-green");
+            } else if (circle.classList.contains("color-green")) {
+                circle.classList.remove("color-green");
+                otherCircle.classList.remove("color-green");
+                circle.classList.add("color-black");
+                otherCircle.classList.add("color-black");
+            } else {
+                circle.classList.remove("color-black");
+                otherCircle.classList.remove("color-black");
+                circle.classList.add("color-red");
+                otherCircle.classList.add("color-red");
+            }
+
+            checkPermission();
+        }
+
+        function toggleLight(light) {
+            if (light.classList.contains("color-yellow")) {
+                light.classList.remove("color-yellow");
+                light.classList.add("color-black");
+            } else {
+                light.classList.remove("color-black");
+                light.classList.add("color-yellow");
+            }
+
+            checkPermission();
+        }
+
+        function checkPermission() {
+            var left1 = document.getElementById("left1").classList;
+            var right1 = document.getElementById("right1").classList;
+            var left2 = document.getElementById("left2").classList;
+            var right2 = document.getElementById("right2").classList;
+            var lights = document.getElementsByClassName("light");
+
+            var isAllowed = false;
+            var reason = 0;
+
+            if (left1.contains("color-red") && right1.contains("color-red")) {
+                isAllowed = false;
+                reason = 3;
+
+                if (left2.contains("color-green") && right2.contains("color-green")) {
+                    reason = 4;
+                }
+                else if (left2.contains("color-red") && right2.contains("color-red")) {
+                    reason = 8;
+                }
+            }
+
+            if (left1.contains("color-green") && right1.contains("color-green")) {
+                if (left2.contains("color-green") && right2.contains("color-green") || left2.contains("color-black") && right2.contains("color-black")) {
+                    isAllowed = true;
+                    reason = 5;
+                }
+                else if (left2.contains("color-red") && right2.contains("color-red")) {
+                    isAllowed = null;
+                    reason = 6;
+                }
+            }
+
+            if (left1.contains("color-black") && right1.contains("color-black")) {
+                if (left2.contains("color-green") && right2.contains("color-green")) {
+                    isAllowed = true;
+                    reason = 5;
+                }
+                else if (left2.contains("color-red") && right2.contains("color-red")) {
+                    isAllowed = false;
+                    reason = 3;
+                }
+                else if (left2.contains("color-black") && right2.contains("color-black")) {
+                    isAllowed = true;
+                    reason = 7;
+                }
+            }
+
+            if (lights[0].classList.contains("color-yellow") ^ lights[1].classList.contains("color-yellow")) {
+                isAllowed = true;
+                reason = 1;
+            }
+
+            if (lights[0].classList.contains("color-yellow") && lights[1].classList.contains("color-yellow")) {
+                isAllowed = true;
+                reason = 2;
+            }
+
+            var permissionElement = document.getElementById("permission");
+            if (isAllowed != null) {
+                permissionElement.innerHTML = isAllowed ? "Doorvaren toegestaan" : "Doorvaren niet toegestaan";
+            }
+            else {
+                permissionElement.innerHTML = "Onbekend";
+            }
+
+            var reasonElement = document.getElementById("reason");
+            reasonElement.innerHTML = reasons[reason];
+        }
+
+        window.onload = (event) => {
+            checkPermission();
+        };
+    </script>
+</head>
+<body>
+    <div style="margin: auto; width: 205px">
+        <div id="top1" class="light color-yellow" onclick="toggleLight(this)"></div>
+        <div id="top2" class="light color-yellow" onclick="toggleLight(this)"></div>
+    </div>
+    <br>
+    <div id="left1" class="circle color-red" onclick="changeColor(this)"></div>
+    <div id="right1" class="circle color-red" style="float: right" onclick="changeColor(this)"></div>
+    <br>
+    <div id="left2" class="circle color-red" onclick="changeColor(this)"></div>
+    <div id="right2" class="circle color-red" style="float: right;" onclick="changeColor(this)"></div>
+    <br>
+    <div style="margin-top: 50px">
+        <p id="permission" style="font-size: xx-large; text-align: center;"></p>
+        <p id="reason" style="font-size: large; text-align: center;"></p>
+    </div>
+</body>
+</html>
