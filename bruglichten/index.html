@@ -70,7 +70,8 @@
                         "Groen licht: doorvaart toegestaan.",
                         "Groen boven rood: lichtconfiguratie niet bekend.",
                         "Geen bruglichten: zelf situatie inschatten.",
-                        "Dubbel rood licht: doorvaart verboden, brug is buiten bedrijf."
+                        "Dubbel rood licht: doorvaart verboden, brug is buiten bedrijf.",
+                        "Dubbel groen licht: doorvaart toegestaan, brug is buiten bedrijf.",
                       ];
 
         function changeColor(circle) {
@@ -124,7 +125,6 @@
 
             if (left1.contains("color-red") && right1.contains("color-red")) {
                 isAllowed = false;
-                reason = 3;
 
                 if (left2.contains("color-green") && right2.contains("color-green")) {
                     reason = 4;
@@ -132,16 +132,23 @@
                 else if (left2.contains("color-red") && right2.contains("color-red")) {
                     reason = 8;
                 }
+                else if (left2.contains("color-black") && right2.contains("color-black")) {
+                    reason = 3;
+                }
             }
 
             if (left1.contains("color-green") && right1.contains("color-green")) {
-                if (left2.contains("color-green") && right2.contains("color-green") || left2.contains("color-black") && right2.contains("color-black")) {
+                if (left2.contains("color-green") && right2.contains("color-green")) {
                     isAllowed = true;
-                    reason = 5;
+                    reason = 9;
                 }
                 else if (left2.contains("color-red") && right2.contains("color-red")) {
                     isAllowed = null;
                     reason = 6;
+                }
+                else if (left2.contains("color-black") && right2.contains("color-black")) {
+                    isAllowed = true;
+                    reason = 5;
                 }
             }
 
