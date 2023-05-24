@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
     <title>Bruglichten tool</title>
     
@@ -137,7 +137,7 @@
                 }
             }
 
-            if (left1.contains("color-green") && right1.contains("color-green")) {
+            else if (left1.contains("color-green") && right1.contains("color-green")) {
                 if (left2.contains("color-green") && right2.contains("color-green")) {
                     isAllowed = true;
                     reason = 9;
@@ -152,7 +152,7 @@
                 }
             }
 
-            if (left1.contains("color-black") && right1.contains("color-black")) {
+            else if (left1.contains("color-black") && right1.contains("color-black")) {
                 if (left2.contains("color-green") && right2.contains("color-green")) {
                     isAllowed = true;
                     reason = 5;
@@ -172,7 +172,7 @@
                 reason = 1;
             }
 
-            if (lights[0].classList.contains("color-yellow") && lights[1].classList.contains("color-yellow")) {
+            else if (lights[0].classList.contains("color-yellow") && lights[1].classList.contains("color-yellow")) {
                 isAllowed = true;
                 reason = 2;
             }
