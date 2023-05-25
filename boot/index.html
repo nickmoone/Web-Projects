@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Boot Dashboard</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/49107a8060.js" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="icon" type="image/x-icon" href="../favicon.ico">
+
+        <style>
+            body, html {
+              height: 100%;
+              margin: 0;
+            }
+        </style>
+        
+        <script>
+            var interval;
+            var lastLocation = null;
+            var lastTime = null;
+
+            geo = navigator.geolocation;
+            function getSpeed(intervalTime) {
+
+                if (geo) {
+                    document.getElementById("kmu").innerHTML = "km/u";
+                    document.getElementById("ms").innerHTML = "m/s";
+
+                    if (interval) {
+                        clearInterval(interval);
+                    }
+
+                    geo.getCurrentPosition(showPosition);
+                    interval = setInterval(function() {geo.getCurrentPosition(showPosition);}, intervalTime);
+                }
+                else {
+                    document.getElementById("speed").innerHTML = "";
+                    document.getElementById("speedMs").innerHTML = "This device does not support GPS speed or you have GPS permissions disabled.";
+                }
+            }
+
+            function deg2rad(deg) {
+                return deg * (Math.PI/180)
+            }
+
+            function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+                var R = 6371; // Radius of the earth in km
+                var dLat = deg2rad(lat2-lat1);  // deg2rad below
+                var dLon = deg2rad(lon2-lon1); 
+                var a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2)
+                    ; 
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                var d = R * c; // Distance in km
+                return d;
+            }
+            
+            function showPosition(position) {
+                var newLocation = [position.coords.latitude, position.coords.longitude];
+                var newTime = position.timestamp;
+                
+                if (lastLocation != null && lastTime != null) {
+                    var distance = getDistanceFromLatLonInKm(lastLocation[0], lastLocation[1], newLocation[0], newLocation[1]); // Km
+                    distance = distance * 1000; // Meters
+                    var time = (newTime - lastTime) / 1000; // Seconds
+                    if (time > 0) {
+                        var speed = distance / time; // Meters per second
+                        document.getElementById("speed").innerHTML = (speed*3.6).toFixed(0);
+                        document.getElementById("speedMs").innerHTML = speed.toFixed(0);
+                    }
+                }
+                else {
+                    document.getElementById("speed").innerHTML = "0";
+                    document.getElementById("speedMs").innerHTML = "0";
+                }
+
+                lastLocation = newLocation;
+                lastTime = newTime;
+            }
+
+            function fullScreenImg() {
+                var img = document.getElementById("bruglichtenImg");
+                var modal = document.getElementById("modal");
+                var modalImg = document.getElementById("modal-content");
+                var original = document.getElementById("bruglichten");
+                modal.classList.remove("w3-hide");
+                original.classList.add("w3-hide");
+                modalImg.src = img.src;
+            }
+
+            function hideModal() {
+                var modal = document.getElementById("modal");
+                var original = document.getElementById("bruglichten");
+                modal.classList.add("w3-hide");
+                original.classList.remove("w3-hide");
+            }
+
+            $(document).ready(function() {getSpeed(3000);});
+        </script>
+    </head>
+    <body class="w3-dark-grey">
+        <!-- <h1 class="w3-padding w3-blue" onclick="location.href='/boot'">&larr; Boot</h1> -->
+
+
+        <div class="w3-display-container" style="height: 100%;">
+            <iframe src="https://www.google.com/maps/d/embed?mid=16SIV9ZDLfYejT23rbmdiQdvMggTblTxf&ehbc=2E312F" width="100%" height="100%" style="position: fixed; top: -80px;"></iframe>
+
+            <!-- <div class="w3-amber" id="modal-text">
+                <button class="w3-dark-grey w3-text-white w3-button w3-xlarge w3-padding w3-display-topright" onclick="hideModalT();">&times;</button>
+                <div id="modal-text-content" style="height: 60vh;">lalala</div>
+            </div> -->
+
+            <div class="w3-hide w3-display-bottomright" id="modal" onclick="hideModal()" style="position: fixed; bottom: 80px; cursor: pointer;">
+                <img src="bruglichten.png" id="modal-content" style="max-height: 80vh; max-width: 80vw;">
+            </div>
+
+            <div class="w3-display-bottomright" id="bruglichten" onclick="fullScreenImg()" style="position: fixed; bottom: 80px; cursor: pointer;">
+                <img src="bruglichten.png" id="bruglichtenImg" style="max-height: 40vh; max-width: 40vw;">
+            </div>
+        </div>
+
+        <div class="w3-display-container w3-blue w3-bottom" style="height: 80px;">
+            <div class="w3-left" style="padding-left: 16px; margin-top: -8px">
+                <span id="speed" class="w3-jumbo">0</span> <span id="kmu" class="w3-large"></span>
+                <span class="w3-large">&nbsp;</span>
+                <span id="speedMs" class="w3-xxlarge">0</span> <span id="ms" class="w3-medium"></span>
+            </div>
+            <div class="w3-display-right" style="margin-top: 4px;">
+                <a class="w3-padding-large" href="https://www.sloepennetwerk.nl/routeplanner"><i class="fa-solid fa-map-location w3-xxlarge w3-center"><div class="w3-small"><br>routes</div></i></a>
+                <a class="w3-padding-large" href="https://www.varendoejesamen.nl/kenniscentrum/artikel/bekijk-de-overzichtskaart-snelvaargebieden/"><i class="fa-solid fa-road w3-xxlarge w3-center"><div class="w3-small"><br>gebieden</div></i></a>
+                <a class="w3-padding-large" href="https://www.vaarbewijzen.nl/boetes-op-het-water/"><i class="fa-solid fa-coins w3-xxlarge w3-center"><div class="w3-small"><br>boetes</div></i></a>
+                <a class="w3-padding-large" href="https://wetten.overheid.nl/BWBR0003628/2016-01-01"><i class="fa-solid fa-book w3-xxlarge w3-center"><div class="w3-small"><br>BPR</div></i></a>
+                <a class="w3-padding-large" href="/boot/vanvossen.html"><i class="fa-solid fa-ship w3-xxlarge w3-center"><div class="w3-small"><br>boot</div></i></a>
+                <a class="w3-padding-large" href="/boot/nood.html"><i class="fa-solid fa-triangle-exclamation w3-xxlarge w3-text-amber w3-center"><div class="w3-small"><br>nood</div></i></a>
+            </div>
+        </div>
+    </body>
+</html>
