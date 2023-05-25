@@ -3,11 +3,13 @@
     <head>
         <title>Boot Dashboard</title>
 
+        <script type="text/javascript" src="../bruglichten/bruglichten.js"></script>
+        <link rel="stylesheet" href="../bruglichten/bruglichten.css">
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://kit.fontawesome.com/49107a8060.js" crossorigin="anonymous"></script>
 
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="icon" type="image/x-icon" href="../favicon.ico">
 
         <style>
             body, html {
@@ -82,44 +84,27 @@
                 lastTime = newTime;
             }
 
-            function fullScreenImg() {
-                var img = document.getElementById("bruglichtenImg");
-                var modal = document.getElementById("modal");
-                var modalImg = document.getElementById("modal-content");
-                var original = document.getElementById("bruglichten");
-                modal.classList.remove("w3-hide");
-                original.classList.add("w3-hide");
-                modalImg.src = img.src;
-            }
-
-            function hideModal() {
-                var modal = document.getElementById("modal");
-                var original = document.getElementById("bruglichten");
-                modal.classList.add("w3-hide");
-                original.classList.remove("w3-hide");
-            }
-
             $(document).ready(function() {getSpeed(3000);});
         </script>
     </head>
-    <body class="w3-dark-grey">
-        <!-- <h1 class="w3-padding w3-blue" onclick="location.href='/boot'">&larr; Boot</h1> -->
-
-
+    <body>
         <div class="w3-display-container" style="height: 100%;">
-            <iframe src="https://www.google.com/maps/d/embed?mid=16SIV9ZDLfYejT23rbmdiQdvMggTblTxf&ehbc=2E312F" width="100%" height="100%" style="position: fixed; top: -80px;"></iframe>
+            <iframe src="https://www.google.com/maps/d/embed?mid=16SIV9ZDLfYejT23rbmdiQdvMggTblTxf&ehbc=2E312F" width="100%" height="100%" style="position: fixed; top: -80px; z-index: -1;"></iframe>
 
-            <!-- <div class="w3-amber" id="modal-text">
-                <button class="w3-dark-grey w3-text-white w3-button w3-xlarge w3-padding w3-display-topright" onclick="hideModalT();">&times;</button>
-                <div id="modal-text-content" style="height: 60vh;">lalala</div>
-            </div> -->
-
-            <div class="w3-hide w3-display-bottomright" id="modal" onclick="hideModal()" style="position: fixed; bottom: 80px; cursor: pointer;">
-                <img src="bruglichten.png" id="modal-content" style="max-height: 80vh; max-width: 80vw;">
+            <div style="margin: auto; width: 180px">
+                <div id="top1" class="light color-yellow" style="float: left;" onclick="toggleLight(this)"></div>
+                <div id="top2" class="light color-yellow" style="float: right;" onclick="toggleLight(this)"></div>
             </div>
-
-            <div class="w3-display-bottomright" id="bruglichten" onclick="fullScreenImg()" style="position: fixed; bottom: 80px; cursor: pointer;">
-                <img src="bruglichten.png" id="bruglichtenImg" style="max-height: 40vh; max-width: 40vw;">
+            <br>
+            <div id="left1" class="circle color-red" onclick="changeColor(this)"></div>
+            <div id="right1" class="circle color-red" style="float: right" onclick="changeColor(this)"></div>
+            <br>
+            <div id="left2" class="circle color-red" onclick="changeColor(this)"></div>
+            <div id="right2" class="circle color-red" style="float: right;" onclick="changeColor(this)"></div>
+            <br>
+            <div class="w3-card-4 w3-dark-grey w3-bottom" style="margin-bottom: 80px;">
+                <p id="permission" class="w3-xlarge" style="text-align: center;"></p>
+                <p id="reason" class="w3-large" style="text-align: center;"></p>
             </div>
         </div>
 
