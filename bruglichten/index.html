@@ -23,6 +23,15 @@
             background-color: #282828;
         }
 
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+            background-color: whitesmoke;
+        }
+
         /* Dark mode */
         @media (prefers-color-scheme: dark) {
             body {
@@ -74,22 +83,6 @@
 
         .light:hover{
             opacity:0.80;
-        }
-
-        .tooltip .tooltiptext {
-            display: none;
-            z-index: 1;
-        }
-
-        .tooltip:hover .tooltiptext {
-            display: block;
-        }
-
-        footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
         }
     </style>
     <script>
@@ -242,15 +235,5 @@
         <p id="permission" style="font-size: xx-large; text-align: center;"></p>
         <p id="reason" style="font-size: large; text-align: center;"></p>
     </div>
-    <footer>
-        <div class="tooltip" style="font-size: large; cursor: pointer; margin: 20px;">
-            <span class="tooltiptext">
-                <hr>
-                <p style="font-size: medium;">Tik op de cirkels om de situatie van de bruglichten aan te geven, de betekenis verschijnt onder de cirkels.</p>
-                <p style="font-size: small;">Getoonde informatie is puur bedoeld als hulpmiddel, hier kunnen geen rechten aan worden ontleend.</p>
-            </span>
-            <b>&#9432;</b>
-        </div>
-    </footer>
 </body>
 </html>
